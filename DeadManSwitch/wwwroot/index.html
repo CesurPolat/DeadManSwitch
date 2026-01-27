@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dead Man's Switch - Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .main-card {
+            max-width: 600px;
+            margin: 100px auto;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .status-dot {
+            height: 15px;
+            width: 15px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container overflow-hidden">
+        <div class="card main-card">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+                <h4 class="mb-0"><i class="bi bi-shield-lock-fill me-2"></i>Dead Man's Switch</h4>
+                <span class="badge bg-success"><span class="status-dot"></span> Aktif</span>
+            </div>
+            <div class="card-body p-5 text-center">
+                <h2 class="card-title mb-4">Sistem Durumu: Güvenli</h2>
+                <p class="card-text text-muted mb-5">
+                    Son sinyal zamanı: <span id="lastPing">Henüz alınmadı</span><br>
+                    Bir sonraki kontrol 24 saat içinde gerçekleşmelidir.
+                </p>
+                
+                <button id="pingBtn" class="btn btn-primary btn-lg px-5 py-3 shadow">
+                    <i class="bi bi-broadcast me-2"></i>Sinyal Gönder (Ping)
+                </button>
+            </div>
+            <div class="card-footer text-muted text-center py-3">
+                © 2026 Dead Man's Switch Monitoring
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#pingBtn').on('click', function() {
+                const now = new Date().toLocaleString('tr-TR');
+                
+                // Buton efekti
+                const $btn = $(this);
+                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Gönderiliyor...');
+
+                // Simüle edilmiş API çağrısı
+                setTimeout(function() {
+                    $('#lastPing').text(now);
+                    $btn.prop('disabled', false).html('<i class="bi bi-broadcast me-2"></i>Sinyal Gönder (Ping)');
+                    
+                    // Başarı mesajı
+                    alert('Sinyal başarıyla gönderildi: ' + now);
+                }, 800);
+            });
+        });
+    </script>
+</body>
+</html>

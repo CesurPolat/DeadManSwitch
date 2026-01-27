@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hQDGrJpaxZgfp8Hao6FiI4WIQ0ggv5CV8v6yfbeGsvJzrLrzhy5cS6pr9q5Bv5Vfq2y1FdbP+YOr1Wxp9CzNAA==",
+  "dgSpecHash": "BoHMgvK/tblI2Um4apdSgb5TvZbbECjUtEhPWTg89hsTMk7/qCxXlfytpRpJ7s4IaBFkPxKOdt62pcyKzutTgg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj",
+  "projectFilePath": "c:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cesur\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\cesur\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",

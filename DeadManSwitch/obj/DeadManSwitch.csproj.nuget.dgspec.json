@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj": {}
+    "c:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj": {
+    "c:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj",
+        "projectUniqueName": "c:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj",
         "projectName": "DeadManSwitch",
-        "projectPath": "C:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj",
+        "projectPath": "c:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\DeadManSwitch.csproj",
         "packagesPath": "C:\\Users\\cesur\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\obj\\",
+        "outputPath": "c:\\Users\\cesur\\source\\repos\\DeadManSwitch\\DeadManSwitch\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\cesur\\AppData\\Roaming\\NuGet\\NuGet.Config",
