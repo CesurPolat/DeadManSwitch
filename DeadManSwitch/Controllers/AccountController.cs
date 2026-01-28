@@ -27,7 +27,7 @@ namespace DeadManSwitch.Controllers
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Username == model.Username);
 
-            if (user != null && _passwordService.VerifyPassword(model.Password, user.PasswordHash))
+            if (user != null && _passwordService.VerifyPasswordHash(model.Password, user.PasswordHash, user.PasswordSalt))
             {
                 var claims = new List<Claim>
                 {

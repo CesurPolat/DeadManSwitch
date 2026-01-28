@@ -1,32 +1,32 @@
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Text;
 
 namespace DeadManSwitch.Services
 {
     public interface IPasswordService
     {
-        string HashPassword(string password);
-        bool VerifyPassword(string password, string hashedPassword);
+        void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
+        bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
     }
 
     public class PasswordService : IPasswordService
     {
-        public string HashPassword(string password)
+        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            // Basit bir örnek için SHA256 kullanıyoruz. 
-            // Gerçek projelerde BCrypt veya Argon2 önerilir.
-            using (var sha256 = SHA256.Create())
+            using (var hmac = new HMACSHA512())
             {
-                var bytes = System.Text.Encoding.UTF8.GetBytes(password);
-                var hash = sha256.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
 
-        public bool VerifyPassword(string password, string hashedPassword)
+        public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            var hashOfInput = HashPassword(password);
-            return hashOfInput == hashedPassword;
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(passwordHash);
+            }
         }
     }
 }

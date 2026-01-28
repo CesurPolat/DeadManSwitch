@@ -16,10 +16,12 @@ namespace DeadManSwitch.Data
         {
             if (!Users.Any())
             {
+                passwordService.CreatePasswordHash("admin123", out byte[] passwordHash, out byte[] passwordSalt);
                 Users.Add(new User
                 {
                     Username = "admin",
-                    PasswordHash = passwordService.HashPassword("admin123")
+                    PasswordHash = passwordHash,
+                    PasswordSalt = passwordSalt
                 });
                 SaveChanges();
             }
