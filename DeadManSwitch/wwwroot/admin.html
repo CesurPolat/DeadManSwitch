@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dead Man's Switch - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f0f2f5; display: none; }
+        .sidebar { min-height: 100vh; background: #212529; color: white; }
+        .nav-link { color: #adb5bd; }
+        .nav-link.active { color: white; background: #0d6efd; }
+        .stat-card { border: none; border-radius: 15px; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse p-0">
+                <div class="p-4">
+                    <h5 class="mb-4"><i class="bi bi-shield-lock-fill me-2"></i>DMS Admin</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link active rounded" href="#"><i class="bi bi-speedometer2 me-2"></i>Panel</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded" href="/"><i class="bi bi-house me-2"></i>Ana Sayfa</a>
+                        </li>
+                        <hr class="mx-3">
+                        <li class="nav-item mb-2">
+                            <a class="nav-link rounded text-danger" href="#" id="logoutBtn"><i class="bi bi-box-arrow-right me-2"></i>Çıkış</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Sistem Durumu</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button id="refreshBtn" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-arrow-clockwise me-1"></i> Yenile
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card stat-card bg-primary text-white shadow">
+                            <div class="card-body">
+                                <h6 class="card-title">Genel Durum</h6>
+                                <h2 id="statusText">Yükleniyor...</h2>
+                                <i class="bi bi-check-circle-fill opacity-50" style="font-size: 2rem; position: absolute; right: 20px; bottom: 20px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card stat-card bg-white shadow-sm">
+                            <div class="card-body text-dark">
+                                <h6 class="text-muted">Son Sinyal</h6>
+                                <h2 id="lastPingText" class="h4">--</h2>
+                                <small id="lastPingDiff" class="text-muted"></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card stat-card bg-white shadow-sm">
+                            <div class="card-body text-dark">
+                                <h6 class="text-muted">Bir Sonraki Kontrol</h6>
+                                <h2 id="nextCheckText" class="h4">--</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mt-2">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0">Yönetim Araçları</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <h6>Email Bildirimi Testi</h6>
+                                <p class="text-muted small">Tanımlı olan admin e-postasına test mesajı gönderir.</p>
+                                <button id="testEmailBtn" class="btn btn-outline-primary">
+                                    <i class="bi bi-envelope-at me-2"></i>Test E-postası Gönder
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <h6>Acil Durum Alarmı</h6>
+                                <p class="text-muted small">Manuel olarak alarm durumunu tetikler (Simülasyon).</p>
+                                <button class="btn btn-outline-danger" onclick="alert('Alarm simüle edildi!')">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>Alarmı Tetikle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        function loadStatus() {
+            $.get('/api/switch/status')
+                .done(function(data) {
+                    $('body').show();
+                    $('#statusText').text(data.status);
+                    $('#lastPingText').text(data.lastPing);
+                    $('#nextCheckText').text(data.nextCheck);
+                    
+                    const card = $('#statusText').closest('.card');
+                    if (data.isAlarm) {
+                        card.removeClass('bg-primary').addClass('bg-danger');
+                        $('#statusText').html('<i class="bi bi-alarm me-2"></i>ALARM');
+                    } else {
+                        card.removeClass('bg-danger').addClass('bg-primary');
+                    }
+                })
+                .fail(function(xhr) {
+                    if (xhr.status === 401) {
+                        window.location.href = '/login.html';
+                    } else {
+                        alert('Bir hata oluştu: ' + xhr.statusText);
+                    }
+                });
+        }
+
+        $(document).ready(function() {
+            loadStatus();
+            
+            $('#refreshBtn').click(loadStatus);
+
+            $('#logoutBtn').click(function(e) {
+                e.preventDefault();
+                $.post('/api/account/logout', function() {
+                    window.location.href = '/login.html';
+                });
+            });
+
+            $('#testEmailBtn').click(function() {
+                const $btn = $(this);
+                $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Gönderiliyor...');
+                
+                $.post('/api/switch/test-email')
+                    .done(function(data) {
+                        alert(data.message);
+                    })
+                    .fail(function(xhr) {
+                        alert('Hata: ' + (xhr.responseJSON?.error || 'Bilinmeyen bir hata oluştu.'));
+                    })
+                    .always(function() {
+                        $btn.prop('disabled', false).html('<i class="bi bi-envelope-at me-2"></i>Test E-postası Gönder');
+                    });
+            });
+
+            // Her 30 saniyede bir güncelle
+            setInterval(loadStatus, 30000);
+        });
+    </script>
+</body>
+</html>

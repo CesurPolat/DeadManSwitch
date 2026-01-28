@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using DeadManSwitch.Services;
+using DeadManSwitch.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DeadManSwitch.Controllers
 {
@@ -8,12 +10,14 @@ namespace DeadManSwitch.Controllers
     public class SwitchController : ControllerBase
     {
         private readonly IMailService _mailService;
+        private readonly ISwitchStore _switchStore;
         private readonly IConfiguration _configuration;
         private readonly ILogger<SwitchController> _logger;
 
-        public SwitchController(IMailService mailService, IConfiguration configuration, ILogger<SwitchController> logger)
+        public SwitchController(IMailService mailService, ISwitchStore switchStore, IConfiguration configuration, ILogger<SwitchController> logger)
         {
             _mailService = mailService;
+            _switchStore = switchStore;
             _configuration = configuration;
             _logger = logger;
         }
@@ -22,10 +26,26 @@ namespace DeadManSwitch.Controllers
         public IActionResult Ping()
         {
             _logger.LogInformation("Ping received at {Time}", DateTime.UtcNow);
+            _switchStore.UpdatePing();
             
             return Ok(new { message = "Sinyal başarıyla alındı.", timestamp = DateTime.UtcNow });
         }
 
+        [Authorize]
+        [HttpGet("status")]
+        public IActionResult GetStatus()
+        {
+            var state = _switchStore.GetState();
+            return Ok(new
+            {
+                lastPing = state.LastPing == DateTime.MinValue ? "Hiç sinyal alınmadı" : state.LastPing.ToString("yyyy-MM-dd HH:mm:ss"),
+                status = state.Status,
+                nextCheck = state.NextCheckExpected.ToString("yyyy-MM-dd HH:mm:ss"),
+                isAlarm = state.Status == "ALARM"
+            });
+        }
+
+        [Authorize]
         [HttpPost("test-email")]
         public async Task<IActionResult> TestEmail()
         {
